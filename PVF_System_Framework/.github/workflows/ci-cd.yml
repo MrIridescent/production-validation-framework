@@ -1,0 +1,102 @@
+name: Production Readiness CI/CD
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: user
+          POSTGRES_PASSWORD: password
+          POSTGRES_DB: db
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+      
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install pytest pytest-cov flake8 black
+      
+      - name: Lint with flake8
+        run: flake8 src/ validation_framework/ --count --select=E9,F63,F7,F82 --show-source --statistics
+      
+      - name: Format check with black
+        run: black --check src/ validation_framework/
+      
+      - name: Run unit tests
+        run: pytest tests/ -v --cov=validation_framework
+      
+      - name: Run production readiness validation
+        run: python src/AAA_PLUS_READINESS_VALIDATION.py
+      
+      - name: Generate coverage report
+        run: pytest tests/ --cov=validation_framework --cov-report=xml
+      
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v3
+        with:
+          files: ./coverage.xml
+
+  security:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+      
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install bandit safety
+      
+      - name: Run security scan with bandit
+        run: bandit -r src/ validation_framework/ -f json -o bandit-report.json
+        continue-on-error: true
+      
+      - name: Check dependencies for vulnerabilities
+        run: safety check --json
+        continue-on-error: true
+
+  build:
+    runs-on: ubuntu-latest
+    needs: [validate, security]
+    
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Set up Docker buildx
+        uses: docker/setup-buildx-action@v2
+      
+      - name: Build Docker image
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          push: false
+          tags: pvf:${{ github.sha }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max

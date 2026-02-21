@@ -1,0 +1,24 @@
+{
+  "env_file_path": ".env",
+  "api_base_url": "http://localhost:8000",
+  "test_timeout": 30,
+  "db_connection_string": "postgresql://username:password@localhost:5432/enterprise_platform",
+  "required_services": ["database", "cache", "storage"],
+  "validate_sections": [
+    "env_config", "security", "performance", 
+    "api_endpoints", "database", "deployment"
+  ],
+  "performance": {
+    "load_test_users": 50,
+    "load_test_duration": 60,
+    "max_response_time": 500,
+    "max_cpu_usage": 80,
+    "max_memory_usage": 80
+  },
+  "security": {
+    "scan_severity": "high",
+    "check_ssl": true,
+    "check_headers": true,
+    "check_auth": true
+  }
+}

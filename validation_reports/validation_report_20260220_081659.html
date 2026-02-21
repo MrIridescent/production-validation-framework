@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Production Readiness Validation Report</title>
+    <meta charset='utf-8'>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; margin: 0; padding: 20px; color: #333; }
+        .container { max-width: 1200px; margin: 0 auto; }
+        h1 { color: #2c3e50; border-bottom: 2px solid #eee; padding-bottom: 10px; }
+        h2 { color: #3498db; margin-top: 30px; }
+        h3 { color: #2c3e50; }
+        .summary { background-color: #f8f9fa; padding: 15px; border-radius: 5px; margin-bottom: 20px; }
+        .section { margin-bottom: 30px; padding: 15px; border: 1px solid #ddd; border-radius: 5px; }
+        .pass { color: #27ae60; }
+        .fail { color: #e74c3c; }
+        .warning { color: #f39c12; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        table, th, td { border: 1px solid #ddd; }
+        th, td { padding: 10px; text-align: left; }
+        th { background-color: #f2f2f2; }
+        tr:nth-child(even) { background-color: #f9f9f9; }
+        .test-result { display: flex; align-items: center; }
+        .badge { display: inline-block; padding: 4px 8px; border-radius: 4px; margin-right: 10px; color: white; }
+        .badge-pass { background-color: #27ae60; }
+        .badge-fail { background-color: #e74c3c; }
+        .badge-warning { background-color: #f39c12; }
+        .result-icon { font-size: 18px; margin-right: 5px; }
+    </style>
+</head>
+<body>
+    <div class='container'>
+        <h1>Production Readiness Validation Report</h1>
+        <div class='summary'>
+            <h2>Summary</h2>
+            <p><strong>Status:</strong> <span class='fail'>❌ NOT PRODUCTION READY</span></p>
+            <p><strong>Date:</strong> 2026-02-20T08:15:59.053543</p>
+            <p><strong>Duration:</strong> 60.65 seconds</p>
+            <p><strong>Tests:</strong> 15/33 passed (45.5%)</p>
+            <p><strong>Failed:</strong> 15, <strong>Warnings:</strong> 3</p>
+        </div>
+        <div class='section'>
+            <h2>Environment Configuration</h2>
+            <p><strong>Status:</strong> <span class='fail'>❌ FAILED</span></p>
+            <p>Passed False/1 tests</p>
+            <table>
+                <tr><th>Test</th><th>Status</th><th>Message</th><th>Remediation Advice</th></tr>
+                <tr><td>File existence check</td><td class='fail'>❌ FAIL</td><td>Environment file .env does not exist</td><td><i>Refer to internal architectural standards for production readiness.</i></td></tr>
+            </table>
+        </div>
+        <div class='section'>
+            <h2>Security Tests</h2>
+            <p><strong>Status:</strong> <span class='fail'>❌ FAILED</span></p>
+            <p>Passed False/11 tests</p>
+            <table>
+                <tr><th>Test</th><th>Status</th><th>Message</th><th>Remediation Advice</th></tr>
+                <tr><td>Base URL accessibility check</td><td class='pass'>✅ PASS</td><td>Base URL is accessible</td><td><i>-</i></td></tr>
+                <tr><td>HTTPS check</td><td class='fail'>❌ FAIL</td><td>Application is not using HTTPS</td><td><i>Refer to internal architectural standards for production readiness.</i></td></tr>
+                <tr><td>Security headers check</td><td class='fail'>❌ FAIL</td><td>Security headers score: 0.0% (Grade F)</td><td><i>Refer to internal architectural standards for production readiness.</i></td></tr>
+                <tr><td>Critical security header: Strict-Transport-Security</td><td class='fail'>❌ FAIL</td><td>Critical security header 'Strict-Transport-Security' is missing</td><td><i>Add the missing header in your web server (Nginx/Apache) or application middleware.</i></td></tr>
+                <tr><td>Critical security header: Content-Security-Policy</td><td class='fail'>❌ FAIL</td><td>Critical security header 'Content-Security-Policy' is missing</td><td><i>Add the missing header in your web server (Nginx/Apache) or application middleware.</i></td></tr>
+                <tr><td>Critical security header: X-Content-Type-Options</td><td class='fail'>❌ FAIL</td><td>Critical security header 'X-Content-Type-Options' is missing</td><td><i>Add the missing header in your web server (Nginx/Apache) or application middleware.</i></td></tr>
+                <tr><td>CORS configuration check</td><td class='pass'>✅ PASS</td><td>CORS is properly configured</td><td><i>-</i></td></tr>
+                <tr><td>Authentication endpoints check</td><td class='fail'>❌ FAIL</td><td>Found 1 issues in auth endpoints</td><td><i>Refer to internal architectural standards for production readiness.</i></td></tr>
+                <tr><td>Authentication security issue</td><td class='fail'>❌ FAIL</td><td>Endpoint /api/customers may lack rate limiting</td><td><i>Refer to internal architectural standards for production readiness.</i></td></tr>
+                <tr><td>Cookie security flags</td><td class='pass'>✅ PASS</td><td>Cookies are securely configured</td><td><i>-</i></td></tr>
+                <tr><td>Information disclosure scan</td><td class='fail'>❌ FAIL</td><td>Exposure issues: Verbose header exposure: Server: Werkzeug/3.1.4 Python/3.13.11</td><td><i>Refer to internal architectural standards for production readiness.</i></td></tr>
+            </table>
+        </div>
+        <div class='section'>
+            <h2>Performance Tests</h2>
+            <p><strong>Status:</strong> <span class='pass'>✅ PASSED</span></p>
+            <p>Passed 4/4 tests</p>
+            <h3>Load Test Results</h3>
+            <table>
+                <tr><th>Test</th><th>Status</th><th>Message</th></tr>
+                <tr><td>Request success rate</td><td class='pass'>✅ PASS</td><td>Success rate: 100.0%</td></tr>
+                <tr><td>Average response time</td><td class='pass'>✅ PASS</td><td>Average response time: 29.8 ms (Max allowed: 500 ms)</td></tr>
+                <tr><td>95th percentile response time</td><td class='pass'>✅ PASS</td><td>95th percentile response time: 111.6 ms (Max allowed: 750.0 ms)</td></tr>
+                <tr><td>Throughput (requests per second)</td><td class='pass'>✅ PASS</td><td>Throughput: 378.9 requests/sec (Min expected: 25.0)</td></tr>
+            </table>
+            <h4>Performance Metrics</h4>
+            <table>
+                <tr><th>Metric</th><th>Value</th></tr>
+                <tr><td>Total Requests</td><td>22736</td></tr>
+                <tr><td>Successful Requests</td><td>22736</td></tr>
+                <tr><td>Failed Requests</td><td>0</td></tr>
+                <tr><td>Success Rate</td><td>100.0%</td></tr>
+                <tr><td>Average Response Time</td><td>29.8 ms</td></tr>
+                <tr><td>95th Percentile Response Time</td><td>111.6 ms</td></tr>
+                <tr><td>Throughput</td><td>378.9 req/sec</td></tr>
+            </table>
+        </div>
+        <div class='section'>
+            <h2>API Tests</h2>
+            <p><strong>Status:</strong> <span class='pass'>✅ PASSED</span></p>
+            <p>Passed 1/1 endpoints</p>
+            <h3>Endpoint Results</h3>
+            <h4>✅ [GET] /health</h4>
+            <table>
+                <tr><th>Test</th><th>Status</th><th>Message</th><th>Remediation Advice</th></tr>
+                <tr><td>Tracking ID support</td><td class='pass'>✅</td><td>API should ideally echo or support X-Request-ID</td><td><i>-</i></td></tr>
+                <tr><td>Status code check</td><td class='pass'>✅</td><td>Expected 200, got 200</td><td><i>-</i></td></tr>
+                <tr><td>Content type check</td><td class='pass'>✅</td><td>Expected application/json, got application/json</td><td><i>-</i></td></tr>
+                <tr><td>SLA Response time</td><td class='pass'>✅</td><td>12.0ms (SLA: 500ms)</td><td><i>-</i></td></tr>
+            </table>
+        </div>
+        <div class='section'>
+            <h2>Database Tests</h2>
+            <p><strong>Status:</strong> <span class='fail'>❌ FAILED</span></p>
+            <p>Passed False/3 tests</p>
+            <table>
+                <tr><th>Test</th><th>Status</th><th>Message</th><th>Remediation Advice</th></tr>
+                <tr><td>Connection string validation</td><td class='pass'>✅ PASS</td><td>Connection string is valid for postgresql database</td><td><i>-</i></td></tr>
+                <tr><td>Production database check</td><td class='pass'>✅ PASS</td><td>Production-ready database engine in use</td><td><i>-</i></td></tr>
+                <tr><td>Database connection</td><td class='fail'>❌ FAIL</td><td>Connection failed: connection to server at "localhost" (::1), port 5432 failed: Connection refused
+	Is the server running on that host and accepting TCP/IP connections?
+connection to server at "localhost" (127.0.0.1), port 5432 failed: Connection refused
+	Is the server running on that host and accepting TCP/IP connections?
+</td><td><i>Refer to internal architectural standards for production readiness.</i></td></tr>
+            </table>
+        </div>
+        <div class='section'>
+            <h2>Deployment Readiness</h2>
+            <p><strong>Status:</strong> <span class='fail'>❌ FAILED</span></p>
+            <p>Passed 2/6 tests</p>
+            <h3>❌ CI/CD Configuration</h3>
+            <table>
+                <tr><th>Test</th><th>Status</th><th>Message</th><th>Remediation Advice</th></tr>
+                <tr><td>CI/CD configuration exists</td><td class='fail'>❌</td><td>No CI/CD configuration found</td><td><i>Refer to internal architectural standards for production readiness.</i></td></tr>
+            </table>
+            <h3>❌ Container Configuration</h3>
+            <table>
+                <tr><th>Test</th><th>Status</th><th>Message</th><th>Remediation Advice</th></tr>
+                <tr><td>Container configuration exists</td><td class='fail'>❌</td><td>No container configuration found</td><td><i>Refer to internal architectural standards for production readiness.</i></td></tr>
+            </table>
+            <h3>❌ Build Configuration</h3>
+            <table>
+                <tr><th>Test</th><th>Status</th><th>Message</th><th>Remediation Advice</th></tr>
+                <tr><td>Build tool configuration exists</td><td class='fail'>❌</td><td>No build tool configuration found</td><td><i>Refer to internal architectural standards for production readiness.</i></td></tr>
+            </table>
+            <h3>❌ Static Assets</h3>
+            <table>
+                <tr><th>Test</th><th>Status</th><th>Message</th><th>Remediation Advice</th></tr>
+                <tr><td>Static assets directory exists</td><td class='pass'>✅</td><td>Found static directories: assets</td><td><i>-</i></td></tr>
+                <tr><td>Minified assets check</td><td class='fail'>❌</td><td>No minified assets found (consider adding minification to build process)</td><td><i>Refer to internal architectural standards for production readiness.</i></td></tr>
+            </table>
+            <h3>✅ Environment Configuration</h3>
+            <table>
+                <tr><th>Test</th><th>Status</th><th>Message</th><th>Remediation Advice</th></tr>
+                <tr><td>Environment file exists</td><td class='pass'>✅</td><td>Found environment files: .env.example</td><td><i>-</i></td></tr>
+            </table>
+        </div>
+    </div>
+</body>
+</html>
